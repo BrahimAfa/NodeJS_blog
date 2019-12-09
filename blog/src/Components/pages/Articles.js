@@ -1,36 +1,43 @@
 import React, { Component } from 'react'
 import NavBar from '../NavBar/NavBar'
 import Data from '../ArticlesListe/ArticlesListe';
+import "./css/articles.css";
 
 class Articles extends Component {
 
     showData = () => {
         let Liste = Data.map((item, key) => {
+            let content = item.body.substring(0, 189) + "...";
             return (
-                <div key={key} class="card">
-                    <div class="card-image">
-                        <figure class="image is-4by3">
+                <div key={key} className="card">
+                    <div className="card-image">
+                        <figure className="image is-3by1">
                             <img src={item.picture} alt="Placeholder image" />
                         </figure>
                     </div>
-                    <div class="card-content">
-                        <div class="media">
-                            <div class="media-left">
-                                <figure class="image is-48x48">
+                    <div className="card-content">
+                        <div className="media">
+                            <div className="media-left">
+                                <figure className="image is-48x48">
                                     <img src={item.picture} alt="Placeholder image" />
                                 </figure>
                             </div>
-                            <div class="media-content">
-                                <p class="title is-4">{item.title}</p>
-                                <p class="subtitle is-6">@{item.author}</p>
+                            <div className="media-content">
+                                <p className="title is-4">{item.title}</p>
+                                <p className="subtitle is-6">@{item.author}</p>
                             </div>
                         </div>
 
-                        <div class="content">
-                            {item.body}
+                        <div className="content">
+                            {content}
                             <br />
-                            <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+                            <time dateTime="2019-1-1">{item.registered}</time>
+                            <div class="buttons has-addons is-right">
+                                <button class="button">Read More</button>
+
+                            </div>
                         </div>
+
                     </div>
                 </div>
             );
