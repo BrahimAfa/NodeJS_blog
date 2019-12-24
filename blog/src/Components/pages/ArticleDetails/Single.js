@@ -3,14 +3,31 @@ import Data from '../../ArticlesListe/ArticlesListe';
 import NotFound from './NotFound'
 import Rating from '@material-ui/lab/Rating'
 import CommentsForm from '../../Actions/comments/commentsForm';
+import axios from "axios";
 import './single.css';
 class Single extends Component {
     state = {
-        item: Data.find(e => e.id == this.props.match.params.id)
+        item: {},
+        done: false
+    }
+    getArticle = async (id) => {
+        //   console.log('get article')
+        const result = await axios.get(`http://localhost:3030/api/articles/${id}`);
+
+        this.setState({ item: result.data, done: true });
+    }
+    componentDidMount() {
+        //  console.log('did mount')
+        this.getArticle(this.props.match.params.id);
+    }
+    formatdate = (date) => {
+        let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(date).toLocaleDateString('en-GB', options);
     }
     showComments = () => {
-        let com = this.state.item.comments;
-        console.log(com)
+        console.log(this.state.item)
+
+        let com = this.state.item.Comments || [];
 
         let comments = com.map((item, key) => {
             return (
@@ -20,19 +37,20 @@ class Single extends Component {
                             <div className="media">
                                 <div className="media-left">
                                     <figure className="image is-48x48">
-                                        <img src={item.avatar} alt="Placeholder image" />
+
+                                        <img src="/logo192.png" alt="Placeholder image" />
                                     </figure>
                                 </div>
                                 <div className="media-content">
                                     <p className="title is-4">{item.author}</p>
-                                    <p className="subtitle is-6">@{item.date}{item.time}</p>
+                                    <p className="subtitle is-6">@{this.formatdate(item.date)}</p>
                                 </div>
 
                             </div>
                             <div className="content">
                                 {item.content}
                                 <br />
-                                <time dateTime="2019-1-1">{this.state.item.registered}</time><br />
+                                <time dateTime="2019-1-1">{this.formatdate(item.date)}</time><br />
                                 <Rating name="half-rating" value={3} precision={0.5} />
                             </div>
 
@@ -53,29 +71,29 @@ class Single extends Component {
                     <div className="card">
                         <div className="card-image">
                             <figure className="image is-3by1">
-                                <img src={this.state.item.picture} alt="Placeholder image" />
+                                <img src={`http://localhost:3030/images/${this.state.item.imagePath}`} alt="Placeholder image" />
                             </figure>
                         </div>
+
                         <div className="card-content">
                             <div className="media">
                                 <div className="media-left">
                                     <figure className="image is-48x48">
-                                        <img src={this.state.item.picture} alt="Placeholder image" />
+                                        <img src={`http://localhost:3030/images/${this.state.item.imagePath}`} alt="Placeholder image" />
                                     </figure>
                                 </div>
                                 <div className="media-content">
-                                    <p className="title is-4">{this.state.item.title}</p>
+                                    <p className="title is-4">{this.state.item.name}</p>
                                     <p className="subtitle is-6">@{this.state.item.author}</p>
                                 </div>
                             </div>
 
                             <div className="content">
-                                {this.state.item.body}
+                                {this.state.item.content}
                                 <br />
-                                <time dateTime="2019-1-1">{this.state.item.registered}</time><br />
+                                <time dateTime="2019-1-1">{this.state.item.date}</time><br />
                                 <Rating name="half-rating" value={3} precision={0.5} />
                             </div>
-
                         </div>
                     </div>
                     <p className="title is-4">Comments</p>
@@ -87,15 +105,10 @@ class Single extends Component {
 
     }
 
-
-
-
-
-
     render() {
         return (
             <div className='container'>
-                {this.showInfo()}
+                {this.state.done ? this.showInfo() : <h1>Loading...</h1>}
                 <CommentsForm />
             </div>
         )

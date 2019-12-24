@@ -4,6 +4,8 @@ import React, { Component } from 'react'
 export default class commentsForm extends Component {
     hundleSubmit = (e) => {
         e.preventDefault();
+        console.log('submited');
+        console.log(e);
     }
     render() {
         return (
@@ -29,7 +31,7 @@ export default class commentsForm extends Component {
                                 <textarea className="textarea"></textarea>
                             </div>
                             <div className="buttons is-right">
-                                <button className="button is-info" onSubmit={this.hundleClick}>Comment</button>
+                                <button className="button is-info" type="submit">Comment</button>
                             </div>
                         </div>
                     </fieldset>

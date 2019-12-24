@@ -13,9 +13,6 @@ const Routes = () => {
             <Route path="/aboutus" exact component={AboutUs} />
             <Route path="/articles/:id" exact component={Single} />
             <Route path="/add" exact component={Add} />
-
-
-
         </Switch>
     )
 }
