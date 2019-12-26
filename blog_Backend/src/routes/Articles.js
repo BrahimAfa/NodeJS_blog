@@ -15,7 +15,7 @@ Article.route('/add').post(upload.single("ImageArticle"), async (req, res) => {
     const article = await new Articles({ name, content, author, imagePath: req.file.filename });
     const doc = await article.save();
     res.status(200).json(doc);
-    
+
 });
 
 Article.route('/:id').get(async (req, res) => {
@@ -39,14 +39,6 @@ Article.route('/:id/rating').post(async (req, res) => {
 });
 
 Article.route('/:id/comments').post(async (req, res) => {
-
-    const { email, author, content } = req.body;
-
-    const cmtobj = {
-        email,
-        author,
-        content
-    }
 
     const article = await Articles.findOneAndUpdate({ _id: req.params.id },
         {

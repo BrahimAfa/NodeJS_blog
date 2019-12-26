@@ -1,24 +1,19 @@
 import React, { Component } from 'react'
-import Data from '../../ArticlesListe/ArticlesListe';
-import NotFound from './NotFound'
+import NotFound from '../NotFound/NotFound'
 import Rating from '@material-ui/lab/Rating'
-import CommentsForm from '../../Actions/comments/commentsForm';
-import axios from "axios";
+import CommentsForm from '../Actions/comments/commentsForm';
+import { getArticle } from "../../api/Articles.api";
 import './single.css';
 class Single extends Component {
     state = {
         item: {},
-        done: false
+        done: false,
+        newComment: false
     }
-    getArticle = async (id) => {
-        //   console.log('get article')
-        const result = await axios.get(`http://localhost:3030/api/articles/${id}`);
 
-        this.setState({ item: result.data, done: true });
-    }
     componentDidMount() {
         //  console.log('did mount')
-        this.getArticle(this.props.match.params.id);
+        getArticle(this.props.match.params.id).then(item => this.setState({ item, done: true }));
     }
     formatdate = (date) => {
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };

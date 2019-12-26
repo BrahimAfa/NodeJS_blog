@@ -2,6 +2,12 @@ import React, { Component } from 'react'
 
 
 export default class commentsForm extends Component {
+    state = {
+        name : "",
+        content :"",
+        author :"",
+        success: false
+    }
     hundleSubmit = (e) => {
         e.preventDefault();
         console.log('submited');

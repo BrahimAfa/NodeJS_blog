@@ -3,19 +3,16 @@ import Data from '../ArticlesListe/ArticlesListe';
 import "./css/articles.css";
 import { Link } from 'react-router-dom'
 import Rating from '@material-ui/lab/Rating';
-import axios from 'axios';
+import { getArticles } from '../../api/Articles.api';
 
 class Articles extends Component {
     state = {
         data: []
     }
-    getArticles = async () => {
-        const result = await axios.get('http://localhost:3030/api/articles');
-        this.setState({ data: result.data });
-    }
-    
+
+
     componentDidMount() {
-        this.getArticles();
+        getArticles().then(data => this.setState({ data }));
     }
 
     showData = () => {
