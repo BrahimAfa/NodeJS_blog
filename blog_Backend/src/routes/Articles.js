@@ -9,6 +9,7 @@ Article.route('/').get(async (req, res) => {
 });
 
 Article.route('/add').post(upload.single("ImageArticle"), async (req, res) => {
+    console.log(req.body);
 
     const { name, content, author } = req.body;
     console.log(req.file.path);
@@ -21,6 +22,8 @@ Article.route('/add').post(upload.single("ImageArticle"), async (req, res) => {
 Article.route('/:id').get(async (req, res) => {
     const id = req.params.id;
     const article = await Articles.findOne({ _id: id });
+    console.log(article._id);
+
     if (!article) return res.status(404).json({ id, error: "The Article you are looking for does not exist" });
     res.status(200).json(article);
 });
@@ -33,25 +36,32 @@ Article.route('/:id/rating').post(async (req, res) => {
             rating: incValue
         }
     }, { new: true });
-    if (!article) return res.status(404).json({ id, error: "The Article you are looking for does not exist" });
+    if (!article) return res.status(400).json({ id, error: "The Article you are looking for does not exist" });
     res.status(200).json(article);
 
 });
 
 Article.route('/:id/comments').post(async (req, res) => {
+    console.log(req.body);
 
+    // const { content, author, email } = ;
+    // const cmt = {
+    //     content,
+    //     author,
+    //     email
+    // };
+
+    // console.log(cmt);
     const article = await Articles.findOneAndUpdate({ _id: req.params.id },
         {
             $push:
             {
                 Comments: req.body
             }
-        }, { new: true });
-
-    res.status(200).json(article.comments);
+        }, { new: true, useFindAndModify: false });
+    res.status(200).json(article.Comments);
 });
-
-Article.route('/:id/comments').get(async (req, res) => {
+Article.route('/comments').get(async (req, res) => {
     const comments = await Articles.find().select('comments');
     res.status(200).json(comments);
 });
