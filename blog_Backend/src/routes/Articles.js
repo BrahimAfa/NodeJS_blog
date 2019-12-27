@@ -9,14 +9,13 @@ Article.route('/').get(async (req, res) => {
 });
 
 Article.route('/add').post(upload.single("ImageArticle"), async (req, res) => {
-    console.log(req.body);
-
+    //console.log(req.body);
     const { name, content, author } = req.body;
-    console.log(req.file.path);
-    const article = await new Articles({ name, content, author, imagePath: req.file.filename });
+    const imagePath = req.file !== undefined ? req.file.filename : "deafult.png";
+    // console.log(imagePath);
+    const article = await new Articles({ name, content, author, imagePath });
     const doc = await article.save();
     res.status(200).json(doc);
-
 });
 
 Article.route('/:id').get(async (req, res) => {
@@ -59,6 +58,8 @@ Article.route('/:id/comments').post(async (req, res) => {
                 Comments: req.body
             }
         }, { new: true, useFindAndModify: false });
+
+
     res.status(200).json(article.Comments);
 });
 Article.route('/comments').get(async (req, res) => {
