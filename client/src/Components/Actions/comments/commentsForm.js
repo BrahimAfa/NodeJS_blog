@@ -1,40 +1,29 @@
 import React, { Component } from 'react'
 
-
 export default class commentsForm extends Component {
-    state = {
-        name : "",
-        content :"",
-        author :"",
-        success: false
-    }
-    hundleSubmit = (e) => {
-        e.preventDefault();
-        console.log('submited');
-        console.log(e);
-    }
+
     render() {
         return (
             <div>
-                <form onSubmit={this.hundleSubmit}>
+                <form onSubmit={this.props.hundleSubmit}>
                     <fieldset>
                         <legend>Comment</legend>
                         <div className="field">
                             <label className="label">Email</label>
                             <div className="control">
-                                <input className="input" type="email" />
+                                <input className="input" type="email" name="email" value={this.props.email} onChange={this.props.hundleChanged} />
                             </div>
                         </div>
                         <div className="field">
                             <label className="label">Author</label>
                             <div className="control">
-                                <input className="input" type="text" />
+                                <input className="input" type="text" name="author" value={this.props.author} onChange={this.props.hundleChanged} />
                             </div>
                         </div>
                         <div className="field">
                             <label className="label">Content</label>
                             <div className="control">
-                                <textarea className="textarea"></textarea>
+                                <textarea className="textarea" name="content" value={this.props.content} onChange={this.props.hundleChanged} />
                             </div>
                             <div className="buttons is-right">
                                 <button className="button is-info" type="submit">Comment</button>

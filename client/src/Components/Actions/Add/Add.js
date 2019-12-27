@@ -4,10 +4,11 @@ import { PostArticle } from "../../../api/Articles.api";
 
 class Add extends Component {
     state = {
-        name : "",
-        content :"",
-        author :"",
-        ImageArticle:null,
+        name: "",
+        content: "",
+        author: "",
+        imageName: "Select an image...",
+        ImageArticle: null,
         success: false
     }
 
@@ -21,23 +22,15 @@ class Add extends Component {
 
         PostArticle(data).then(isSucces => this.setState({ success: isSucces }));
     }
-    titleHandler = (e) => {
+    changeHandler = (e) => {
         console.log(e);
-        this.setState({ name: e.target.value });
-    }
-    authorHandler = (e) => {
-        console.log(e);
-        this.setState({ author: e.target.value });
-    }
-    fileHandler = (e) => {
-        console.log(e);
-        this.setState({ ImageArticle: e.target.files[0] });
-    }
-    contentHandler = (e) => {
-        console.log(e.target.value);
-        this.setState({ content: e.target.value });
+        this.setState({ [e.target.name]: e.target.value });
     }
 
+    fileHandler = (e) => {
+        // console.log(e);
+        this.setState({ ImageArticle: e.target.files[0], imageName: e.target.files[0].name });
+    }
     render() {
         return (
             <div className='container'>
@@ -46,22 +39,22 @@ class Add extends Component {
                     <div className="field">
                         <label className="label">Title</label>
                         <div className="control">
-                            <input className="input" type="text" onChange={this.titleHandler} />
+                            <input className="input" name="name" type="text" onChange={this.changeHandler} />
                         </div>
                     </div>
                     <div className="field">
                         <label className="label">Author</label>
                         <div className="control">
-                            <input className="input" type="text" onChange={this.authorHandler} />
+                            <input className="input" type="text" name="author" onChange={this.changeHandler} />
                         </div>
                     </div>
                     <div className="field">
                         <div className="file is-info">
                             <label className="file-label">
-                                <input className="file-input" type="file" name="resume" onChange={this.fileHandler} />
+                                <input className="file-input" type="file" name="ImageArticle" onChange={this.fileHandler} />
                                 <img src="photo.png" alt="add img" />
                                 <span className="file-name">
-                                    add an image...
+                                    {this.state.imageName}
                                 </span>
                             </label>
                         </div>
@@ -69,7 +62,7 @@ class Add extends Component {
                     <div className="field">
                         <label className="label">Content</label>
                         <div className="control">
-                            <textarea className="textarea" onChange={this.contentHandler} />
+                            <textarea className="textarea" name="content" onChange={this.changeHandler} />
                         </div>
                         <div className="buttons is-right">
                             <button className="button is-info" type="submit">Save</button>

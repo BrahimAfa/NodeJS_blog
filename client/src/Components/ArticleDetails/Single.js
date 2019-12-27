@@ -2,29 +2,60 @@ import React, { Component } from 'react'
 import NotFound from '../NotFound/NotFound'
 import Rating from '@material-ui/lab/Rating'
 import CommentsForm from '../Actions/comments/commentsForm';
-import { getArticle } from "../../api/Articles.api";
+import { getArticle, PostComment } from "../../api/Articles.api";
 import './single.css';
+
 class Single extends Component {
     state = {
+        id: "",
         item: {},
-        done: false,
-        newComment: false
+        comments: [],
+        email: "",
+        content: "",
+        author: "",
+        success: false
+    }
+    hundleSubmit = (e) => {
+        e.preventDefault();
+        console.log('submited');
+        // const data = new FormData();
+        // data.append("email", this.state.email);
+        // data.append("content", this.state.content);
+        // data.append("author", this.state.author);
+        const data = {
+            email: this.state.email,
+            content: this.state.content,
+            author: this.state.author
+        }
+        console.log(data);
+
+        //   console.log(this.state.email);
+        // for (var pair of data.entries()) {
+        //     console.log(pair[0] + ', ' + pair[1]);
+        // }
+
+        PostComment(data, this.state.id).then(comments => this.setState({ comments }));
+
+    }
+    hundleChanged = (e) => {
+        console.log(e.target.name, e.target.value);
+        this.setState({ [e.target.name]: e.target.value });
     }
 
     componentDidMount() {
         //  console.log('did mount')
-        getArticle(this.props.match.params.id).then(item => this.setState({ item, done: true }));
+        this.setState({ id: this.props.match.params.id });
+        getArticle(this.props.match.params.id)
+            .then(article => this.setState({ item: article, comments: article.Comments || [], success: true }))
+            .catch(err => this.setState({ item: undefined, success: true }));
     }
     formatdate = (date) => {
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(date).toLocaleDateString('en-GB', options);
     }
     showComments = () => {
-        console.log(this.state.item)
 
-        let com = this.state.item.Comments || [];
-
-        let comments = com.map((item, key) => {
+        let cmts = this.state.comments.map((item, key) => {
             return (
                 <div key={key}>
                     <div className="card">
@@ -55,7 +86,7 @@ class Single extends Component {
                 </div >
             );
         });
-        return comments;
+        return cmts;
     }
     showInfo = () => {
         if (this.state.item == undefined) {
@@ -94,7 +125,6 @@ class Single extends Component {
                     <p className="title is-4">Comments</p>
                     {this.showComments()}
                 </div>
-
             );
         }
 
@@ -103,9 +133,14 @@ class Single extends Component {
     render() {
         return (
             <div className='container'>
-                {this.state.done ? this.showInfo() : <h1>Loading...</h1>}
-                <CommentsForm />
-            </div>
+                {this.state.success ? this.showInfo() : < h1 > Loading Article...</h1>}
+
+                <CommentsForm hundleChanged={this.hundleChanged}
+                    hundleSubmit={this.hundleSubmit}
+                    content={this.state.content}
+                    email={this.state.email}
+                    author={this.state.author} />
+            </div >
         )
     }
 }
